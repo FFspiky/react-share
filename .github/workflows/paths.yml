@@ -1,0 +1,27 @@
+name: Distribution tests in a Unicode checkout
+on:
+  push:
+    branches: [ci/dist-test-paths]
+permissions:
+  contents: read
+jobs:
+  test:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: 'package 测试'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: f020eb524a9446cb9c61bede7d7c66ef5519d34b
+          path: 'package 测试'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+      - run: npm ci
+      - run: npm run build
+      - run: npm run test:dist
